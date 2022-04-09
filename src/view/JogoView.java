@@ -22,13 +22,13 @@ public class JogoView {
         JogoDAO jogoDAO = new JogoDAO();
         Scanner scan = new Scanner(System.in);
 
-        int opcao, codigo;
+        int opcao, id;
         boolean selJogo, selLivro;
 
         do {
             selJogo = false;
             selLivro = false;
-            System.out.println("- Menu -");
+            System.out.println("\n- Menu -");
             System.out.println("0. Sair\n1. Jogos\n2. Livros");
             System.out.print("Escolha: ");
             opcao = Integer.parseInt(scan.nextLine());
@@ -51,9 +51,9 @@ public class JogoView {
                 case 1 -> {
                     System.out.println("- Listar -");
                     System.out.println("OBS: Digite 0 para listar tudo");
-                    System.out.print("Codigo: ");
-                    codigo = Integer.parseInt(scan.nextLine());
-                    exibir(jogoDAO, codigo);
+                    System.out.print("ID: ");
+                    id = Integer.parseInt(scan.nextLine());
+                    exibir(jogoDAO, id);
                 }
                 case 2 -> {
                     Jogo jogo = new Jogo();
@@ -71,27 +71,34 @@ public class JogoView {
                     jogoDAO.cadastrar(jogo);
                 }
                 case 3 -> {
-                    Jogo jogo = new Jogo();
                     System.out.println("- Atualizar -");
-                    System.out.print("Codigo: ");
-                    codigo = Integer.parseInt(scan.nextLine());
-                    exibir(jogoDAO, codigo);
-                    jogoDAO.atualizar(codigo);
-                    exibir(jogoDAO, codigo);
+                    System.out.print("ID: ");
+                    id = Integer.parseInt(scan.nextLine());
+                    exibir(jogoDAO, id);
+                    jogoDAO.atualizar(id);
+                    exibir(jogoDAO, id);
                 }
-                /*case 4 -> {
+                case 4 -> {
                     System.out.println("- Locar -");
+                    System.out.print("ID: ");
+                    id = Integer.parseInt(scan.nextLine());
+                    exibir(jogoDAO, id);
+                    jogoDAO.ativo(id, 2);
                 }
                 case 5 -> {
                     System.out.println("- Devolver -");
+                    System.out.print("ID: ");
+                    id = Integer.parseInt(scan.nextLine());
+                    exibir(jogoDAO, id);
+                    jogoDAO.ativo(id, 1);
                 }
                 case 6 -> {
                     System.out.println("- Deletar -");
-                    System.out.print("Codigo: ");
-                    codigo = Integer.parseInt(scan.nextLine());
-                    remover(codigo);
+                    System.out.print("ID: ");
+                    id = Integer.parseInt(scan.nextLine());
+                    jogoDAO.ativo(id, 0);
                 }
-                default -> System.out.println("Opcão inválida!\n");*/
+                default -> System.out.println("Opcão inválida!\n");
             }
         } while(opcao != 0);
     }

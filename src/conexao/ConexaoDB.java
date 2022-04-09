@@ -5,7 +5,7 @@ import java.sql.*;
 public class ConexaoDB {
     static final String DB_URL = "jdbc:mysql://localhost:3306/entretenimento";
     static final String USER = "root";
-    static final String PASS = "root";
+    static final String PASS = "";
 
     public static Connection createConnectionMySQL() {
         Connection connection = null;
