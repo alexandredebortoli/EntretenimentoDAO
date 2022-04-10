@@ -1,7 +1,9 @@
 package view;
 
 import dao.JogoDAO;
+import dao.LivroDAO;
 import model.Jogo;
+import model.Livro;
 
 import java.util.Scanner;
 
@@ -18,8 +20,22 @@ public class JogoView {
             }
         }
     }
+    public static void exibir(LivroDAO livroDAO, int codigo) {
+        for(Livro l : livroDAO.listar(codigo)) {
+            if(codigo == 0) {
+                System.out.println("Livro: " + l.getTitulo());
+            } else {
+                System.out.print("Livro: " + l.getTitulo());
+                System.out.print(", Ano: " + l.getAno());
+                System.out.print(", Categoria: " + l.getCategoria());
+                System.out.println(", Sinopse: " + l.getSinopse());
+                System.out.println(", Edicão: " + l.getEdicao());
+            }
+        }
+    }
     public static void menu() {
         JogoDAO jogoDAO = new JogoDAO();
+        LivroDAO livroDAO = new LivroDAO();
         Scanner scan = new Scanner(System.in);
 
         int opcao, id;
@@ -53,50 +69,94 @@ public class JogoView {
                     System.out.println("OBS: Digite 0 para listar tudo");
                     System.out.print("ID: ");
                     id = Integer.parseInt(scan.nextLine());
-                    exibir(jogoDAO, id);
+                    if(selJogo) {
+                        exibir(jogoDAO, id);
+                    } else {
+                        exibir(livroDAO, id);
+                    }
                 }
                 case 2 -> {
-                    Jogo jogo = new Jogo();
                     System.out.println("- Cadastrar -");
-                    System.out.print("Nome: ");
-                    jogo.setTitulo(scan.nextLine());
-                    System.out.print("Ano: ");
-                    jogo.setAno(Integer.parseInt(scan.nextLine()));
-                    System.out.print("Categoria: ");
-                    jogo.setCategoria(scan.nextLine());
-                    System.out.print("Sinopse: ");
-                    jogo.setSinopse(scan.nextLine());
-                    System.out.print("1. Ativo / 2. Locado: ");
-                    jogo.setAtivo(Integer.parseInt(scan.nextLine()));
-                    jogoDAO.cadastrar(jogo);
+
+                    if(selJogo) {
+                        Jogo jogo = new Jogo();
+                        System.out.print("Nome: ");
+                        jogo.setTitulo(scan.nextLine());
+                        System.out.print("Ano: ");
+                        jogo.setAno(Integer.parseInt(scan.nextLine()));
+                        System.out.print("Categoria: ");
+                        jogo.setCategoria(scan.nextLine());
+                        System.out.print("Sinopse: ");
+                        jogo.setSinopse(scan.nextLine());
+                        System.out.print("1. Ativo / 2. Locado: ");
+                        jogo.setAtivo(Integer.parseInt(scan.nextLine()));
+                        jogoDAO.cadastrar(jogo);
+                    } else {
+                        Livro livro = new Livro();
+                        System.out.print("Nome: ");
+                        livro.setTitulo(scan.nextLine());
+                        System.out.print("Ano: ");
+                        livro.setAno(Integer.parseInt(scan.nextLine()));
+                        System.out.print("Categoria: ");
+                        livro.setCategoria(scan.nextLine());
+                        System.out.print("Sinopse: ");
+                        livro.setSinopse(scan.nextLine());
+                        System.out.print("Edicão: ");
+                        livro.setEdicao(Integer.parseInt(scan.nextLine()));
+                        System.out.print("1. Ativo / 2. Locado: ");
+                        livro.setAtivo(Integer.parseInt(scan.nextLine()));
+                        livroDAO.cadastrar(livro);
+                    }
                 }
                 case 3 -> {
                     System.out.println("- Atualizar -");
                     System.out.print("ID: ");
                     id = Integer.parseInt(scan.nextLine());
-                    exibir(jogoDAO, id);
-                    jogoDAO.atualizar(id);
-                    exibir(jogoDAO, id);
+                    if(selJogo) {
+                        exibir(jogoDAO, id);
+                        jogoDAO.atualizar(id);
+                        exibir(jogoDAO, id);
+                    } else {
+                        exibir(livroDAO, id);
+                        livroDAO.atualizar(id);
+                        exibir(livroDAO, id);
+                    }
                 }
                 case 4 -> {
                     System.out.println("- Locar -");
                     System.out.print("ID: ");
                     id = Integer.parseInt(scan.nextLine());
-                    exibir(jogoDAO, id);
-                    jogoDAO.ativo(id, 2);
+                    if(selJogo) {
+                        exibir(jogoDAO, id);
+                        jogoDAO.ativo(id, 2);
+                    } else {
+                        exibir(livroDAO, id);
+                        livroDAO.ativo(id, 2);
+                    }
                 }
                 case 5 -> {
                     System.out.println("- Devolver -");
                     System.out.print("ID: ");
                     id = Integer.parseInt(scan.nextLine());
-                    exibir(jogoDAO, id);
-                    jogoDAO.ativo(id, 1);
+                    if(selJogo) {
+                        exibir(jogoDAO, id);
+                        jogoDAO.ativo(id, 1);
+                    } else {
+                        exibir(livroDAO, id);
+                        livroDAO.ativo(id, 1);
+                    }
                 }
                 case 6 -> {
                     System.out.println("- Deletar -");
                     System.out.print("ID: ");
                     id = Integer.parseInt(scan.nextLine());
-                    jogoDAO.ativo(id, 0);
+                    if(selJogo) {
+                        exibir(jogoDAO, id);
+                        jogoDAO.ativo(id, 0);
+                    } else {
+                        exibir(livroDAO, id);
+                        livroDAO.ativo(id, 0);
+                    }
                 }
                 default -> System.out.println("Opcão inválida!\n");
             }

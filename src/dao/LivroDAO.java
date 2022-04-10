@@ -1,30 +1,31 @@
 package dao;
 
 import conexao.ConexaoDB;
-import model.Jogo;
+import model.Livro;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class JogoDAO {
-    public void cadastrar(Jogo jogo) {
-        String QUERY = "INSERT INTO jogo (titulo, ano, categoria, sinopse, ativo) "
-                + "VALUES (?, ?, ?, ?, ?)";
+public class LivroDAO {
+    public void cadastrar(Livro livro) {
+        String QUERY = "INSERT INTO livro (titulo, ano, categoria, sinopse, edicao, ativo) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             connection = ConexaoDB.createConnectionMySQL();
             preparedStatement = (PreparedStatement) connection.prepareStatement(QUERY);
-            preparedStatement.setString(1, jogo.getTitulo());
-            preparedStatement.setInt(2, jogo.getAno());
-            preparedStatement.setString(3, jogo.getCategoria());
-            preparedStatement.setString(4, jogo.getSinopse());
-            preparedStatement.setInt(5, jogo.getAtivo());
+            preparedStatement.setString(1, livro.getTitulo());
+            preparedStatement.setInt(2, livro.getAno());
+            preparedStatement.setString(3, livro.getCategoria());
+            preparedStatement.setString(4, livro.getSinopse());
+            preparedStatement.setInt(5, livro.getEdicao());
+            preparedStatement.setInt(6, livro.getAtivo());
 
             preparedStatement.execute();
-            System.out.println("Jogo cadastrado com sucesso");
+            System.out.println("Livro cadastrado com sucesso");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,14 +43,14 @@ public class JogoDAO {
         }
     }
 
-    public List<Jogo> listar(int id) {
-        List<Jogo> jogos = new ArrayList<Jogo>();
+    public List<Livro> listar(int id) {
+        List<Livro> livros = new ArrayList<Livro>();
         String QUERY;
         if(id == 0) {
-            QUERY = "SELECT * FROM jogo WHERE ativo != 0";
+            QUERY = "SELECT * FROM livro WHERE ativo != 0";
         }
         else {
-            QUERY = "SELECT * FROM jogo WHERE id = " + id + " AND ativo != 0";
+            QUERY = "SELECT * FROM livro WHERE id = " + id + " AND ativo != 0";
         }
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -62,16 +63,17 @@ public class JogoDAO {
             resultSet = preparedStatement.executeQuery(QUERY);
 
             while (resultSet.next()) {
-                Jogo jogo = new Jogo();
+                Livro livro = new Livro();
 
-                jogo.setId(resultSet.getInt("id"));
-                jogo.setTitulo(resultSet.getString("titulo"));
-                jogo.setAno(resultSet.getInt("ano"));
-                jogo.setCategoria(resultSet.getString("categoria"));
-                jogo.setSinopse(resultSet.getString("sinopse"));
-                jogo.setAtivo(resultSet.getInt("ativo"));
+                livro.setId(resultSet.getInt("id"));
+                livro.setTitulo(resultSet.getString("titulo"));
+                livro.setAno(resultSet.getInt("ano"));
+                livro.setCategoria(resultSet.getString("categoria"));
+                livro.setSinopse(resultSet.getString("sinopse"));
+                livro.setEdicao(resultSet.getInt("edicao"));
+                livro.setAtivo(resultSet.getInt("ativo"));
 
-                jogos.add(jogo);
+                livros.add(livro);
             }
 
         } catch (SQLException e) {
@@ -88,51 +90,59 @@ public class JogoDAO {
                 e.printStackTrace();
             }
         }
-        return jogos;
+        return livros;
     }
 
     public void atualizar(int id) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("1. Nome\n2. Ano\n3. Categoria\n4. Sinopse\n5. Tudo");
+        System.out.println("1. Nome\n2. Ano\n3. Categoria\n4. Sinopse\n5. Edição\n6. Tudo");
         System.out.print("Alterar: ");
         String QUERY = "";
-        //String titulo, ano, categoria, sinopse;
         do {
-            Jogo jogo = new Jogo();
+            Livro livro = new Livro();
             switch (Integer.parseInt(scan.nextLine())) {
                 case 1 -> {
                     System.out.print("Novo titulo: ");
-                    jogo.setTitulo(scan.nextLine());
-                    QUERY = "UPDATE jogo SET titulo = '" + jogo.getTitulo() + "' WHERE id = " + id;
+                    livro.setTitulo(scan.nextLine());
+                    QUERY = "UPDATE livro SET titulo = '" + livro.getTitulo() + "' WHERE id = " + id;
                 }
                 case 2 -> {
                     System.out.print("Novo ano: ");
-                    jogo.setAno(Integer.parseInt(scan.nextLine()));
-                    QUERY = "UPDATE jogo SET ano = " + jogo.getAno() + " WHERE id = " + id;
+                    livro.setAno(Integer.parseInt(scan.nextLine()));
+                    QUERY = "UPDATE livro SET ano = " + livro.getAno() + " WHERE id = " + id;
                 }
                 case 3 -> {
                     System.out.print("Nova categoria: ");
-                    jogo.setCategoria(scan.nextLine());
-                    QUERY = "UPDATE jogo SET telefone = '" + jogo.getCategoria() + "' WHERE id = " + id;
+                    livro.setCategoria(scan.nextLine());
+                    QUERY = "UPDATE livro SET telefone = '" + livro.getCategoria() + "' WHERE id = " + id;
                 }
                 case 4 -> {
                     System.out.print("Nova sinopse: ");
-                    jogo.setSinopse(scan.nextLine());
-                    QUERY = "UPDATE jogo SET dataNascimento = '" + jogo.getSinopse() + "' WHERE id = " + id;
+                    livro.setSinopse(scan.nextLine());
+                    QUERY = "UPDATE jogo SET dataNascimento = '" + livro.getSinopse() + "' WHERE id = " + id;
                 }
                 case 5 -> {
+                    System.out.print("Nova edicão: ");
+                    livro.setAno(Integer.parseInt(scan.nextLine()));
+                    QUERY = "UPDATE livro SET edicao = " + livro.getEdicao() + " WHERE id = " + id;
+                }
+                case 6 -> {
                     System.out.print("Novo titulo: ");
-                    jogo.setTitulo(scan.nextLine());
+                    livro.setTitulo(scan.nextLine());
                     System.out.print("Novo ano: ");
-                    jogo.setAno(Integer.parseInt(scan.nextLine()));
+                    livro.setAno(Integer.parseInt(scan.nextLine()));
                     System.out.print("Novo categoria: ");
-                    jogo.setCategoria(scan.nextLine());
+                    livro.setCategoria(scan.nextLine());
                     System.out.print("Nova sinopse: ");
-                    jogo.setSinopse(scan.nextLine());
-                    QUERY = "UPDATE jogo SET titulo = '" + jogo.getTitulo()
-                            + "', ano = " + jogo.getAno()
-                            + ", categoria = '" + jogo.getCategoria()
-                            + "', sinopse = '" + jogo.getSinopse() + "' WHERE id = " + id;
+                    livro.setSinopse(scan.nextLine());
+                    System.out.print("Novo edicão: ");
+                    livro.setEdicao(Integer.parseInt(scan.nextLine()));
+                    QUERY = "UPDATE livro SET titulo = '" + livro.getTitulo()
+                            + "', ano = " + livro.getAno()
+                            + ", categoria = '" + livro.getCategoria()
+                            + "', sinopse = '" + livro.getSinopse()
+                            + "', edicao = " + livro.getEdicao()
+                            + " WHERE id = " + id;
                 }
                 default -> System.out.println("Opcão inválida!");
             }
@@ -153,7 +163,7 @@ public class JogoDAO {
     }
 
     public void ativo(int id, int ativo) {
-        String QUERY = "UPDATE jogo SET ativo = " + ativo + " WHERE id = " + id;
+        String QUERY = "UPDATE livro SET ativo = " + ativo + " WHERE id = " + id;
         if(ativo == 1) {
             System.out.println("Devolvendo...");
         } else if(ativo == 2) {
